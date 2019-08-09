@@ -2,7 +2,6 @@ const headers = {
     'Access-Control-Allow-Origin' : `*`
 }
 
-const axios = require(`axios`)
 const PromiseFtp = require(`promise-ftp`)
 const ftp = new PromiseFtp()
 
