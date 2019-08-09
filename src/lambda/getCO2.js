@@ -18,6 +18,7 @@ exports.handler = async (event, context, callback) => {
         console.log('Server message: '+serverMessage)
         return ftp.get(`/products/trends/co2/co2_trend_gl.txt`)
     }).then(stream => streamToString(stream)).then(string => {
+        console.log(string)
         ftp.end()
         callback(null, {statusCode: 204, body: string, headers})
     });
