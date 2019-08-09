@@ -20,7 +20,7 @@ exports.handler = async (event, context, callback) => {
     }).then(stream => streamToString(stream)).then(string => {
         console.log(string)
         ftp.end()
-        callback(null, {statusCode: 204, body: string, headers})
+        callback(null, {statusCode: 200, body: string, headers})
     });
 }
 
