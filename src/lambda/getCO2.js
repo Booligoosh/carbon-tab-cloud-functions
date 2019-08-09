@@ -17,10 +17,9 @@ exports.handler = async (event, context, callback) => {
     .then(serverMessage => {
         console.log('Server message: '+serverMessage)
         return ftp.get(`/products/trends/co2/co2_trend_gl.txt`)
-    }).then(async stream => {
-        const result = await streamToString(stream)
+    }).then(stream => streamToString(stream)).then(string => {
         ftp.end()
-        callback(null, {statusCode: 204, body: result, headers})
+        callback(null, {statusCode: 204, body: string, headers})
     });
 }
 
@@ -29,8 +28,10 @@ function streamToString (readableStream) {
         let data = ``
 
         readableStream.on('readable', function() {
-            while ((chunk=readableStream.read()) != null) {
-                data += chunk;
+            let chunk = readableStream.read()
+            while (chunk) {
+                data += chunk
+                chunk = readableStream.read()
             }
         })
         
