@@ -19,9 +19,33 @@ exports.handler = async (event, context, callback) => {
         return ftp.get(`/products/trends/co2/co2_trend_gl.txt`)
     }).then(stream => streamToString(stream)).then(string => {
         console.log(string)
+
+        // Parse string
+        const dates = {}
+        string.split(`\n`).filter(line => !line.startsWith(`#`)).forEach(line => {
+            const regexResult = /^ *?([0-9]+) *?([0-9]+) *?([0-9]+) *?([0-9.]+) *?([0-9.]+) *?$/.exec(line)
+            console.log(regexResult)
+            if (regexResult) {
+                const year = Number(regexResult[1])
+                const month = Number(regexResult[2])
+                const day = Number(regexResult[3])
+                const cycle = Number(regexResult[4])
+                const trend = Number(regexResult[5])
+                dates[`${padWithZeroes(year, 4)}-${padWithZeroes(month, 2)}-${padWithZeroes(day, 2)}`] = {cycle,trend}
+            }
+        })
+
         ftp.end()
-        callback(null, {statusCode: 200, body: string, headers})
+        callback(null, {statusCode: 200, body: JSON.stringify(dates), headers})
     });
+}
+
+function padWithZeroes (n, minLength) {
+    n = n.toString()
+    while (n.length < minLength) {
+        n = `0` + n
+    }
+    return n
 }
 
 function streamToString (readableStream) {
