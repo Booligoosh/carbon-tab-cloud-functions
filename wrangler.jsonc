@@ -1,0 +1,14 @@
+{
+  // https://developers.cloudflare.com/workers/wrangler/configuration/
+  "name": "carbon-tab-cloud-functions",
+  "main": "src/index.js",
+  "compatibility_date": "2026-06-18",
+
+  // Binds the whole hostname to this worker and creates the DNS record automatically.
+  // The API is served at https://functions.carbon-tab.ethan.link/.netlify/functions/getCO2
+  // (path matched in src/index.js), preserving the original Netlify path so existing
+  // clients keep working.
+  "routes": [
+    { "pattern": "functions.carbon-tab.ethan.link", "custom_domain": true }
+  ]
+}
